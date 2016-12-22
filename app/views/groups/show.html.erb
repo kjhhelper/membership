@@ -1,0 +1,33 @@
+<!-- logout form -->
+<form action="/sessions/<%=current_user.id%>" method="post">
+<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+<input type="hidden" name="_method" value="delete">
+<input type="submit" name="name" value="logout">
+</form>
+
+<a href="/groups/new">dashboard</a>
+<h3>Organization name <%=@group.name%></h3>
+
+<% if current_user.id && Join.find_by_user_id_and_group_id(current_user.id, @group.id) == nil%>
+<form action="/joins" method="post">
+  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+  <input type="hidden" name="g_id" value="<%=@group.id%>">
+  <input type="submit" value="Join">
+</form>
+<% end%>
+
+<% if current_user.id && Join.find_by_user_id_and_group_id(current_user.id, @group.id) != nil %>
+<form action="/joins/<%=@group.id%>" method="post">
+  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+  <input type="hidden" name="_method" value="delete">
+  <input type="submit" value="Leave">
+</form>
+<% end %>
+
+<% if current_user.id && Join.find_by_user_id_and_group_id(current_user.id, @group.id) != nil %>
+<p>created by:<%=User.find(@group.user_id).f_name%></p>
+<p>Members</p>
+<%@joins.each do |j|%>
+<p><%=User.find(j.user_id).f_name%></p>
+<%end%>
+<%end%>

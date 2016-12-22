@@ -1,0 +1,29 @@
+<!-- logout form -->
+<form action="/sessions/<%=current_user.id%>" method="post">
+<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+<input type="hidden" name="_method" value="delete">
+<input type="submit" name="name" value="logout">
+</form>
+
+<h2>Hi <%=current_user.f_name%>!</h2>
+<p>Here are the organizations you may join:</p>
+<%@groups.each do |s|%>
+    <p><a href="/groups/<%=s.id%>"><%=s.name%></a></p>
+    Members:<%=s.joins.count%>
+    <p>Description:</p>
+    <textarea rows="8" cols="60"><%=s.description%></textarea>
+  <%end%>
+
+<h3>Create a new organization</h3>
+<form action='/groups' method="post">
+  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+  Organization name:<input type="text" name="group[name]" value=""><br>
+  Description:<br><textarea name="group[description]" rows="8" cols="40"></textarea><br>
+  <input type="submit" name="name" value="Create">
+</form>
+
+<%if flash[:errors]%>
+<%flash[:errors].each do |a|%>
+<p><%=a%></p>
+<% end %>
+<%end%>
